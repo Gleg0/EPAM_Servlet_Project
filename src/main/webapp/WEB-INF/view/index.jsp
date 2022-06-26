@@ -5,6 +5,6 @@
 <html>
 <body>
 <h2>Hello World!</h2>
-<label>number = ${number}</label>
+${number}
 </body>
 </html>
