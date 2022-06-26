@@ -1,10 +1,20 @@
 package com.epam.conferences.entity.event;
 
+import com.epam.conferences.entity.Entity;
 import com.epam.conferences.entity.user.User;
 
-public class Report {
+public class Report implements Entity<Long> {
     private Long id;
     private String name;
     private User speaker;
     private String description;
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
