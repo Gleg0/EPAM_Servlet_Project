@@ -3,6 +3,7 @@ package com.epam.conferences.controller;
 import com.epam.conferences.entity.event.Event;
 import com.epam.conferences.entity.user.User;
 import com.epam.conferences.service.EventService;
+import com.epam.conferences.service.LocaleResolverService;
 import com.epam.conferences.service.UserService;
 import org.fed333.servletboot.annotation.*;
 import org.fed333.servletboot.dispatcher.HttpMethod;
@@ -22,6 +23,8 @@ public class EventsController {
     private EventService eventService;
     @Inject
     private UserService userService;
+    @Inject
+    private LocaleResolverService localeResolverService;
 
     @RequestMapping(url = "/events",method = HttpMethod.GET)
     public String events(Model model, HttpSession session,
