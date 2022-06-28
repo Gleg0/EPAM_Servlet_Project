@@ -11,10 +11,10 @@
         <div class="d-flex">
             <div class="d-flex me-4">
                 <a type="button" class="btn btn-primary me-4" href="${pageContext.request.contextPath}/before"><fmt:message key="past-events"/></a>
-                <input type="button" class="btn btn-primary me-4" onclick="window.location.href='/events'" value="<fmt:message key="events"/>"/>
+                <input type="button" class="btn btn-primary me-4" onclick="window.location.href='${pageContext.request.contextPath}/events'" value="<fmt:message key="events"/>"/>
                 <c:if test="${user != null}">
                     <c:if test="${requestScope.user.role == 'MODERATOR'}">
-                        <input type="button" class="btn btn-primary me-4" onclick="window.location.href='/add/event'" value="<fmt:message key="add-event"/>"/>
+                        <input type="button" class="btn btn-primary me-4" onclick="window.location.href='${pageContext.request.contextPath}/add/event'" value="<fmt:message key="add-event"/>"/>
                     </c:if>
                 </c:if>
             </div>
@@ -42,11 +42,11 @@
                 </a>
             </c:if>
             <c:if test="${requestScope.user == null}">
-                <a class="btn btn-outline-success" href="/login"><fmt:message key="log-in"/></a>
-                <a class="btn btn-outline-success" href="/registration"><fmt:message key="reg-button"/></a>
+                <a class="btn btn-outline-success" href="${pageContext.request.contextPath}/login"><fmt:message key="log-in"/></a>
+                <a class="btn btn-outline-success" href="${pageContext.request.contextPath}/registration"><fmt:message key="reg-button"/></a>
             </c:if>
             <c:if test="${requestScope.user != null}">
-                <form class="mb-0" method="post" action="/logout">
+                <form class="mb-0" method="post" action="${pageContext.request.contextPath}/logout">
                     <button class="btn btn-outline-danger" type="submit">Logout</button>
                 </form>
             </c:if>

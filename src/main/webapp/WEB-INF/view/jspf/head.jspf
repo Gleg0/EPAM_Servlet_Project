@@ -31,3 +31,5 @@
     })
 </script>
 <meta charset="UTF-8">
+<fmt:setLocale value="${sessionScope.lang}"/>
+<fmt:setBundle basename="resources/messages"/>
