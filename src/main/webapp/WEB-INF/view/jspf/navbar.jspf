@@ -1,5 +1,7 @@
-<nav xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" xmlns:th="http://www.w3.org/1999/xhtml"
-     th:fragment="navbar" class="navbar navbar-light bg-light">
+<%@ taglib prefix='c' uri='http://java.sun.com/jsp/jstl/core' %>
+<%@ taglib prefix='fmt' uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<nav class="navbar navbar-light bg-light">
     <div class="container-fluid">
         <div class="d-flex">
             <div class="nav-item me-4">
@@ -7,53 +9,47 @@
             </div>
         </div>
         <div class="d-flex">
-            <div class="row" th:if="${user != null}">
-            </div>
             <div class="d-flex me-4">
-                <a type="button" class="btn btn-primary me-4" th:href="@{/before}" th:text="#{past-events}"></a>
-                <input type="button" class="btn btn-primary me-4" onclick="window.location.href='/events'" th:value="#{events}"/>
-                <div th:if="${user != null}">
-                    <div sec:authorize="hasAuthority('MODERATOR')">
-                        <input type="button" class="btn btn-primary me-4" onclick="window.location.href='/add/event'" th:value="#{add-event}"/>
-                    </div>
-                </div>
+                <a type="button" class="btn btn-primary me-4" href="${pageContext.request.contextPath}/before"><fmt:message key="past-events"/></a>
+                <input type="button" class="btn btn-primary me-4" onclick="window.location.href='/events'" value="<fmt:message key="events"/>"/>
+                <c:if test="${user != null}">
+                    <c:if test="${requestScope.user.role == 'MODERATOR'}">
+                        <input type="button" class="btn btn-primary me-4" onclick="window.location.href='/add/event'" value="<fmt:message key="add-event"/>"/>
+                    </c:if>
+                </c:if>
             </div>
             <div class="nav-item me-4">
-                <div th:if="${param.eventId == null}">
-                    <a class="btn btn-primary" th:text="#{lang}"
-                       th:href="@{__${#httpServletRequest.requestURI}__?lang=__${#locale.toString()}=='ua'?'en':'ua'__}">
+                <c:if test="${param.eventId == null}">
+                    <a class="btn btn-primary"
+                       href="${requestScope['javax.servlet.forward.request_uri']}?lang=${sessionScope.lang=='ua'?'en':'ua'}">
+                        <fmt:message key="lang"/>
                     </a>
-                </div>
-            </div>
-            <div sec:authorize="hasAuthority('SPEAKER')">
-                <div class="nav-item me-4" th:with="eventId=${param.eventId != null ? param.eventId[0] : 'none'}">
-                    <a class="btn btn-primary" th:text="#{speaker}"
-                       th:href="@{/speaker}">
+                </c:if>
+                <c:if test="${param.eventId != null}">
+                    <a class="btn btn-primary"
+                       href="${requestScope['javax.servlet.forward.request_uri']}?lang=${sessionScope.lang=='ua'?'en':'ua'}&eventId=${param.eventId}"><fmt:message key="lang"/>
                     </a>
-                </div>
+                </c:if>
             </div>
-            <div sec:authorize="hasAuthority('MODERATOR')">
-                <a class="btn btn-primary" th:text="#{acceptRequest}"
-                   th:href="@{/acceptRequestList}">
+            <c:if test="${requestScope.user.role == 'SPEAKER'}">
+                <a class="btn btn-primary"
+                   href="${pageContext.request.contextPath}/speaker"><fmt:message key="speaker"/>
                 </a>
-            </div>
-            <div class="nav-item me-4" th:with="eventId=${param.eventId != null ? param.eventId[0] : 'none'}">
-                <div th:if="${param.eventId != null}">
-                    <a class="btn btn-primary" th:text="#{lang}"
-                       th:href="@{__${#httpServletRequest.requestURI}__?eventId=__${eventId}__&lang=__${#locale.toString()}=='ua'?'en':'ua'__}">
-                    </a>
-                </div>
-            </div>
-            <div class="nav-item me-2" sec:authorize="!isAuthenticated()">
-                <a class="btn btn-outline-success" href="/login" th:text="#{log-in}"></a>
-                <a class="btn btn-outline-success" href="/registration" th:text="#{reg-button}"></a>
-            </div>
-            <div class="nav-item me-2" sec:authorize="isAuthenticated()">
+            </c:if>
+            <c:if test="${requestScope.user.role == 'MODERATOR'}">
+                <a class="btn btn-primary"
+                   href="${pageContext.request.contextPath}/acceptRequestList"><fmt:message key="acceptRequest"/>
+                </a>
+            </c:if>
+            <c:if test="${requestScope.user == null}">
+                <a class="btn btn-outline-success" href="/login"><fmt:message key="log-in"/></a>
+                <a class="btn btn-outline-success" href="/registration"><fmt:message key="reg-button"/></a>
+            </c:if>
+            <c:if test="${requestScope.user != null}">
                 <form class="mb-0" method="post" action="/logout">
-                    <input hidden name="_csrf" th:value="${_csrf.token}">
                     <button class="btn btn-outline-danger" type="submit">Logout</button>
                 </form>
-            </div>
+            </c:if>
         </div>
     </div>
 </nav>
