@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface EventRepository extends ReadWriteDao<Event,Long> {
     List<Event> findAllByDateAfter(Date date);
+
+    List<Event> findAllByDateBefore(Date from);
 }

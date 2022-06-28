@@ -25,6 +25,5 @@ public class MainServlet extends HttpServlet {
         ApplicationContext context = (ApplicationContext) getServletContext().getAttribute(APPLICATION_CONTEXT_ATTRIBUTE);
         String requestURI = req.getRequestURI();
         context.getObject(CommandDispatcher.class).getCommand(requestURI, HttpMethod.POST).execute(req, resp);
-
     }
 }

@@ -4,13 +4,14 @@ import com.epam.conferences.entity.event.Event;
 import com.epam.conferences.repository.EventRepository;
 import com.epam.conferences.repository.conection.ConnectionPool;
 import com.epam.conferences.repository.dao.persist.DaoPersist;
+import com.epam.conferences.service.ServiceUtils;
 import org.fed333.servletboot.annotation.Inject;
 import org.fed333.servletboot.annotation.Singleton;
 
 import javax.annotation.PostConstruct;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +22,8 @@ public class EventRepositoryImpl implements EventRepository {
     private static final String INSERT = "INSERT INTO t_event (date,description,name) VALUES (?,?,?)";
     private static final String UPDATE = "UPDATE t_event SET date=?, description=?, name=?";
     private static final String SELECT_ALL_BY_DATE_AFTER = "SELECT * FROM t_event WHERE date > ?";
-
+    private static final String SELECT_BY_ID = "SELECT * FROM t_event WHERE id = ?";
+    private static final String SELECT_ALL_BY_DATE_BEFORE = "SELECT * FROM t_event WHERE date <= ?";
     private EventRepositoryPersist eventRepositoryPersist;
 
     @Inject
@@ -32,8 +34,8 @@ public class EventRepositoryImpl implements EventRepository {
     }
 
     @Override
-    public Optional<Event> findById(Long aLong) {
-        return Optional.empty();
+    public Optional<Event> findById(Long id) {
+        return eventRepositoryPersist.findBy(SELECT_BY_ID,preparedStatement -> preparedStatement.setLong(1,id));
     }
 
     @Override
@@ -42,7 +44,12 @@ public class EventRepositoryImpl implements EventRepository {
     }
     @Override
     public List<Event> findAllByDateAfter(Date date) {
-        return eventRepositoryPersist.findAllBy(SELECT_ALL_BY_DATE_AFTER, preparedStatement -> preparedStatement.setObject(1,date));
+        return eventRepositoryPersist.findAllBy(SELECT_ALL_BY_DATE_AFTER, preparedStatement -> preparedStatement.setObject(1,ServiceUtils.convertDate(date)));
+    }
+
+    @Override
+    public List<Event> findAllByDateBefore(Date date) {
+        return eventRepositoryPersist.findAllBy(SELECT_ALL_BY_DATE_BEFORE, preparedStatement -> preparedStatement.setObject(1,ServiceUtils.convertDate(date)));
     }
 
     @Override
